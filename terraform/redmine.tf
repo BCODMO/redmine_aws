@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "redmine" {
         "image": "${aws_ecr_repository.redmine.repository_url}:latest",
         "portMappings": [
             {
-                "containerPort": 8080
+                "containerPort": 3000
             }
         ],
         "logConfiguration": {
@@ -90,7 +90,7 @@ resource "aws_ecs_service" "redmine" {
   load_balancer {
     target_group_arn = aws_alb_target_group.web.id
     container_name   = "redmine_container_${terraform.workspace}"
-    container_port   = 8080
+    container_port   = 3000
   }
 
 

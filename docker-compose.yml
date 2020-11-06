@@ -1,0 +1,17 @@
+version: "2.2"
+
+services:
+  redmine: 
+    build:
+      network: host
+      context: "."
+      dockerfile: Dockerfile
+      args:
+        - REDMINE_EMAIL_PASSWORD=${REDMINE_EMAIL_PASSWORD}
+    env_file:
+      - ".env"
+    restart: "unless-stopped"
+    stop_grace_period: "3s"
+    ports:
+      - "0.0.0.0:3000:3000"
+
