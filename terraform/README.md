@@ -18,3 +18,13 @@ You will need to import the https certificate. For example:
 terraform import aws_acm_certificate.cert arn:aws:acm:us-east-1:504672911985:certificate/7d76e817-d2dc-44e6-902c-d9cb8898e6f2
 ```
 
+In order to migrate mysql database files from bcodmo1-internal, you need to:
+
+1. Update the RDS instance to be publicly accesible
+2. Log onto bcodmo1-internal, and go to  `/data/projects/redmine/backups/mysql`
+3. Run the command:
+```
+ # replace hostname if relevant
+ gunzip -c <latest_backup>.gz | mysql -u admin --password=<rds_password> --port=3306 -h redmine.cbv8y0by9pmj.us-east-1.rds.amazonaws.com redmine
+
+```
