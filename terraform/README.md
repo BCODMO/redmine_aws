@@ -28,3 +28,8 @@ In order to migrate mysql database files from bcodmo1-internal, you need to:
  gunzip -c <latest_backup>.gz | mysql -u admin --password=<rds_password> --port=3306 -h redmine.cbv8y0by9pmj.us-east-1.rds.amazonaws.com redmine
 
 ```
+
+To migrate the files from redmine to S3:
+
+1. Log into bcodmo-internal and go to /data/projects/redmine/redmine/files/
+2. Run `aws s3 cp /data/projects/redmine/redmine s3://bcodmo-redmine –recursive
