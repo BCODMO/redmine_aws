@@ -13,6 +13,8 @@ resource "aws_alb_target_group" "web" {
   health_check {
     timeout  = 120
     interval = 300
+    # Support redirect for the login as healthy
+    matcher = "200-299,302"
 
   }
 

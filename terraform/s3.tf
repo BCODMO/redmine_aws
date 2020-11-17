@@ -17,13 +17,13 @@ resource "aws_s3_bucket_policy" "b" {
   policy = <<POLICY
 {
   "Version": "2012-10-17",
-  "Id": "DenyAccess",
+  "Id": "DenyAndAllowRead",
   "Statement": [
     {
       "Sid": "IPAllow",
       "Effect": "Deny",
       "Principal": "*",
-      "Action": "s3:*",
+      "Action": "s3:GetObject",
       "Resource": "arn:aws:s3:::bcodmo-redmine/*",
       "Condition": {
         "StringNotEquals": {
