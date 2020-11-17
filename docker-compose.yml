@@ -8,6 +8,9 @@ services:
       dockerfile: Dockerfile
       args:
         - REDMINE_EMAIL_PASSWORD=${REDMINE_EMAIL_PASSWORD}
+        - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+        - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+        - AWS_BUCKET=${AWS_BUCKET}
     env_file:
       - ".env"
     restart: "unless-stopped"
