@@ -1,0 +1,1065 @@
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+@prefix map: <#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix redmine: <https://d2rq.bco-dmo.org/id/redmine/> .
+@prefix schema: <https://schema.org/> .
+
+map:database a d2rq:Database;
+   jdbc:characterEncoding "latin1";
+   jdbc:autoReconnect "true";
+   jdbc:keepAlive "3600"; # value in seconds
+   jdbc:keepAliveQuery "SELECT 1"; # (optionally to override default noop query)
+   jdbc:zeroDateTimeBehavior "convertToNull";
+   d2rq:jdbcDSN "jdbc:mysql://REDMINE_DB_MYSQL:REDMINE_DB_PORT/redmine";
+   d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+   d2rq:password "REDMINE_DB_PASSWORD";
+   d2rq:username "REDMINE_DB_USERNAME" .
+
+## Attachments ##
+
+map:attachments a d2rq:ClassMap;
+   d2rq:class redmine:Attachment;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/attachment/@@attachments.id@@" .
+
+map:label-attachments a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:pattern "@@attachments.filename@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:attachments.author_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:property redmine:attachments.author_id;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@attachments.author_id@@" .
+
+map:attachments.container_id_issue a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:condition "attachments.container_type = 'Issue'";
+   d2rq:property redmine:attachments.issue_id;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@attachments.container_id@@" .
+
+map:attachments.container_id_document a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:condition "attachments.container_type = 'Document'";
+   d2rq:property redmine:attachments.document_id;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/document/@@attachments.container_id@@" .
+
+#### Properties ####
+map:attachments.url a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:pattern "https://kato.bco-dmo.org/attachments/@@attachments.id@@/@@attachments.filename@@";
+   d2rq:datatype xsd:anyURI;
+   d2rq:property schema:url .
+
+   map:attachments.download_url a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:pattern "https://kato.bco-dmo.org/attachments/download/@@attachments.id@@/@@attachments.filename@@";
+   d2rq:datatype xsd:anyURI;
+   d2rq:property schema:contentUrl .
+
+map:attachments.container_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:property redmine:attachments.container_id;
+   d2rq:column "attachments.container_id" .
+
+map:attachments.container_type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.container_type";
+   d2rq:property redmine:attachments.container_type .
+
+map:attachments.content_type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.content_type";
+   d2rq:property redmine:attachments.content_type .
+
+map:attachments.created_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.created_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:attachments.created_on .
+
+map:attachments.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.description";
+   d2rq:lang "en-us";
+   d2rq:property redmine:attachments.description .
+
+map:attachments.digest a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.digest";
+   d2rq:property redmine:attachments.digest .
+
+map:attachments.disk_directory a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.disk_directory";
+   d2rq:property redmine:attachments.disk_directory .
+
+map:attachments.disk_filename a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.disk_filename";
+   d2rq:property redmine:attachments.disk_filename .
+
+map:attachments.filename a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.filename";
+   d2rq:property redmine:attachments.filename .
+
+map:attachments.filesize a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:column "attachments.filesize";
+   d2rq:datatype xsd:long;
+   d2rq:property redmine:attachments.filesizeInBytes .
+
+map:attachments.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:attachments;
+   d2rq:property redmine:attachments.id;
+   d2rq:datatype xsd:token;
+   d2rq:column "attachments.id" .
+
+
+## Custom Fields ##
+
+map:custom_fields a d2rq:ClassMap;
+   d2rq:class redmine:CustomField;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_fields.id@@" .
+
+map:label-custom_fields a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:pattern "@@custom_fields.name@@";
+   d2rq:property rdfs:label .
+
+#### Properties ####
+map:custom_fields.default_value a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.default_value";
+   d2rq:property redmine:custom_fields.default_value .
+
+map:custom_fields.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.description";
+   d2rq:property redmine:custom_fields.description .
+
+map:custom_fields.editable a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.editable";
+   d2rq:property redmine:custom_fields.editable .
+
+map:custom_fields.field_format a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.field_format";
+   d2rq:property redmine:custom_fields.field_format .
+
+map:custom_fields.format_store a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.format_store";
+   d2rq:property redmine:custom_fields.format_store .
+
+map:custom_fields.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.id";
+   d2rq:datatype xsd:token;
+   d2rq:property redmine:custom_fields.id .
+
+map:custom_fields.is_filter a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.is_filter";
+   d2rq:property redmine:custom_fields.is_filter .
+
+map:custom_fields.is_for_all a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.is_for_all";
+   d2rq:property redmine:custom_fields.is_for_all .
+
+map:custom_fields.is_required a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.is_required";
+   d2rq:property redmine:custom_fields.is_required .
+
+map:custom_fields.max_length a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.max_length";
+   d2rq:property redmine:custom_fields.max_length .
+
+map:custom_fields.min_length a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.min_length";
+   d2rq:property redmine:custom_fields.min_length .
+
+map:custom_fields.multiple a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.multiple";
+   d2rq:property redmine:custom_fields.multiple .
+
+map:custom_fields.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.name";
+   d2rq:property redmine:custom_fields.name .
+
+map:custom_fields.position a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.position";
+   d2rq:property redmine:custom_fields.position .
+
+map:custom_fields.possible_values a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.possible_values";
+   d2rq:property redmine:custom_fields.possible_values .
+
+map:custom_fields.regexp a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.regexp";
+   d2rq:property redmine:custom_fields.regexp .
+
+map:custom_fields.searchable a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.searchable";
+   d2rq:property redmine:custom_fields.searchable .
+
+map:custom_fields.type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.type";
+   d2rq:property redmine:custom_fields.type .
+
+map:custom_fields.visible a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields;
+   d2rq:column "custom_fields.visible";
+   d2rq:property redmine:custom_fields.visible .
+
+## Custom Field: Enumerations ##
+map:custom_field_enumerations a d2rq:ClassMap;
+   d2rq:class redmine:CustomFieldEnumeration;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field-enumerations/@@custom_field_enumerations.id@@" .
+
+map:label-custom_field_enumerations a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:pattern "@@custom_field_enumerations.id@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:custom_field_enumerations.custom_field_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_field_enumerations.custom_field_id@@";
+   d2rq:property redmine:custom_field_enumerations.custom_field_id .
+
+#### Properties ####
+map:custom_field_enumerations.active a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:column "custom_field_enumerations.active";
+   d2rq:property redmine:custom_field_enumerations.active .
+
+map:custom_field_enumerations.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:column "custom_field_enumerations.id";
+   d2rq:datatype xsd:token;
+   d2rq:property redmine:custom_field_enumerations.id .
+
+map:custom_field_enumerations.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:column "custom_field_enumerations.name";
+   d2rq:property redmine:custom_field_enumerations.name .
+
+map:custom_field_enumerations.position a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_field_enumerations;
+   d2rq:column "custom_field_enumerations.position";
+   d2rq:property redmine:custom_field_enumerations.position .
+
+## Custom Field: Projects ##
+
+map:custom_fields_projects a d2rq:ClassMap;
+   d2rq:class redmine:CustomFieldsProject;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field-project/cf:@@custom_fields_projects.custom_field_id@@_project:@@custom_fields_projects.project_id@@" .
+
+#### Links ####
+map:custom_fields_projects.custom_field_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_projects;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_fields_projects.custom_field_id@@";
+   d2rq:property redmine:custom_fields_projects.custom_field_id .
+
+map:custom_fields_projects.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_projects;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@custom_fields_projects.project_id@@";
+   d2rq:property redmine:custom_fields_projects.project_id .
+
+
+## Custom Field: Roles ##
+
+map:custom_fields_roles a d2rq:ClassMap;
+   d2rq:class redmine:CustomFieldsRole;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom_fields_roles/cf:@@custom_fields_roles.custom_field_id@@_role:@@custom_fields_roles.role_id@@" .
+
+#### Links ####
+map:custom_fields_roles.custom_field_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_roles;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_fields_roles.custom_field_id@@";
+   d2rq:property redmine:custom_fields_roles.custom_field_id .
+
+map:custom_fields_roles.role_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_roles;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@custom_fields_roles.role_id@@";
+   d2rq:property redmine:custom_fields_roles.role_id .
+
+
+## Custom Field: Trackers ##
+
+map:custom_fields_trackers a d2rq:ClassMap;
+   d2rq:class redmine:CustomFieldsTracker;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom_fields_trackers/cf:@@custom_fields_trackers.custom_field_id@@_tracker:@@custom_fields_trackers.tracker_id@@" .
+
+#### Links ####
+map:custom_fields_trackers.custom_field_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_trackers;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_fields_trackers.custom_field_id@@";
+   d2rq:property redmine:custom_fields_trackers.custom_field_id .
+
+map:custom_fields_trackers.tracker_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_fields_trackers;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/tracker/@@custom_fields_trackers.tracker_id@@";
+   d2rq:property redmine:custom_fields_trackers.tracker_id .
+
+
+## Custom Values ##
+
+map:custom_values a d2rq:ClassMap;
+   d2rq:class redmine:CustomValue;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-value/@@custom_values.id@@" .
+
+map:label-custom_values a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:pattern "@@custom_values.id@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:custom_values.custom_field_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/custom-field/@@custom_values.custom_field_id@@";
+   d2rq:property redmine:custom_values.custom_field_id .
+
+map:custom_values.customized_id_issue a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:condition "custom_values.customized_type = 'Issue'";
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@custom_values.customized_id@@" ;
+   d2rq:property redmine:custom_values.customized_id .
+
+#### Properties ####
+map:custom_values.customized_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:column "custom_values.customized_id" ;
+   d2rq:property redmine:custom_values.customized_id .
+
+map:custom_values.customized_type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:column "custom_values.customized_type";
+   d2rq:property redmine:custom_values.customized_type .
+
+map:custom_values.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:column "custom_values.id";
+   d2rq:property redmine:custom_values.id .
+
+map:custom_values.value a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:custom_values;
+   d2rq:column "custom_values.value";
+   d2rq:property redmine:custom_values.value .
+
+
+## Documents ##
+
+map:documents a d2rq:ClassMap;
+   d2rq:class redmine:Document;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/document/@@documents.id@@" .
+map:label-documents a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:pattern "@@documents.title@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:documents.category_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/enumeration/@@documents.category_id@@";
+   d2rq:property redmine:documents.category_id .
+
+map:documents.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@documents.project_id@@";
+   d2rq:property redmine:documents.project_id .
+
+#### Properties ####
+map:documents.created_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:column "documents.created_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:documents.created_on .
+
+map:documents.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:column "documents.description";
+   d2rq:datatype rdf:HTML;
+   d2rq:property redmine:documents.description .
+
+map:documents.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:column "documents.id";
+   d2rq:property redmine:documents.id .
+
+map:documents.title a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:documents;
+   d2rq:column "documents.title";
+   d2rq:property redmine:documents.title .
+
+
+## Enumeration ##
+
+map:enumerations a d2rq:ClassMap;
+   d2rq:class redmine:Enumeration;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/enumeration/@@enumerations.id@@" .
+map:label-enumerations a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:pattern "@@enumerations.type@@: @@enumerations.name@@";
+   d2rq:property rdfs:label .
+
+#### Properties ####
+map:enumerations.active a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.active";
+   d2rq:property redmine:enumerations.active .
+
+map:enumerations.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.id";
+   d2rq:property redmine:enumerations.id .
+
+map:enumerations.is_default a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.is_default";
+   d2rq:property redmine:enumerations.is_default .
+
+map:enumerations.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.name";
+   d2rq:property redmine:enumerations.name .
+
+map:enumerations.parent_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.parent_id";
+   d2rq:property redmine:enumerations.parent_id .
+
+map:enumerations.position a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.position";
+   d2rq:property redmine:enumerations.position .
+
+map:enumerations.position_name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.position_name";
+   d2rq:property redmine:enumerations.position_name .
+
+map:enumerations.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.project_id";
+   d2rq:property redmine:enumerations.project_id .
+
+map:enumerations.type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:enumerations;
+   d2rq:column "enumerations.type";
+   d2rq:property redmine:enumerations.type .
+
+
+## Group Users ##
+
+map:groups_users a d2rq:ClassMap;
+   d2rq:class redmine:GroupUser;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/group-user/group:@@groups_users.group_id@@_user:@@groups_users.user_id@@" .
+
+#### Links ####
+map:groups_users.group_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:groups_users;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@groups_users.group_id@@";
+   d2rq:property redmine:groups_users.group_id .
+
+map:groups_users.user_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:groups_users;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@groups_users.user_id@@";
+   d2rq:property redmine:groups_users.user_id .
+
+
+## Issue Categories ##
+
+map:issue_categories a d2rq:ClassMap;
+   d2rq:class redmine:IssueCategory;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue-category/@@issue_categories.id@@" .
+map:label-issue_categories a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_categories;
+   d2rq:pattern "@@issue_categories.name@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:issue_categories.assigned_to_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_categories;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@issue_categories.assigned_to_id@@";
+   d2rq:property redmine:issue_categories.assigned_to_id .
+
+map:issue_categories.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_categories;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@issue_categories.project_id@@";
+   d2rq:property redmine:issue_categories.project_id .
+
+#### Properties ####
+map:issue_categories.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_categories;
+   d2rq:column "issue_categories.id";
+   d2rq:property redmine:issue_categories.id .
+
+map:issue_categories.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_categories;
+   d2rq:column "issue_categories.name";
+   d2rq:property redmine:issue_categories.name .
+
+## Issue Relations ##
+
+map:issue_relations a d2rq:ClassMap;
+   d2rq:class redmine:IssueRelation;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue-relation/@@issue_relations.id@@" .
+map:label-issue_relations a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:pattern "Issue:@@issue_relations.issue_from_id@@ @@issue_relations.relation_type@@ Issue:@@issue_relations.issue_to_id@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:issue_relations.issue_from_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@issue_relations.issue_from_id@@";
+   d2rq:property redmine:issue_relations.issue_from_id .
+
+map:issue_relations.issue_to_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@issue_relations.issue_to_id@@";
+   d2rq:property redmine:issue_relations.issue_to_id .
+
+#### Properties ####
+map:issue_relations.delay a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:column "issue_relations.delay";
+   d2rq:property redmine:issue_relations.delay .
+
+map:issue_relations.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:column "issue_relations.id";
+   d2rq:property redmine:issue_relations.id .
+
+map:issue_relations.relation_type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_relations;
+   d2rq:column "issue_relations.relation_type";
+   d2rq:property redmine:issue_relations.relation_type .
+
+## Issues ##
+
+map:issues a d2rq:ClassMap;
+   d2rq:class redmine:Issue;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@issues.id@@" .
+map:label-issues a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:pattern "Issue #@@issues.id@@ - @@issues.subject@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:issues.assigned_to_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@issues.assigned_to_id@@";
+   d2rq:property redmine:issues.assigned_to_id .
+
+map:issues.author_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@issues.author_id@@";
+   d2rq:property redmine:issues.author_id .
+
+map:issues.category_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue-category/@@issues.category_id@@";
+   d2rq:property redmine:issues.category_id .
+
+map:issues.fixed_version_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/version/@@issues.fixed_version_id@@";
+   d2rq:property redmine:issues.fixed_version_id .
+
+map:issues.parent_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@issues.parent_id@@";
+   d2rq:property redmine:issues.parent_id .
+
+map:issues.priority_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/enumeration/@@issues.priority_id@@";
+   d2rq:property redmine:issues.priority_id .
+
+map:issues.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@issues.project_id@@";
+   d2rq:property redmine:issues.project_id .
+
+map:issues.root_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@issues.root_id@@";
+   d2rq:property redmine:issues.root_id .
+
+map:issues.status_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue-status/@@issues.status_id@@";
+   d2rq:property redmine:issues.status_id .
+
+map:issues.tracker_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/tracker/@@issues.tracker_id@@";
+   d2rq:property redmine:issues.tracker_id .
+
+####Properties ####
+map:issues.kato_link a d2rq:PropertyBridge;
+  d2rq:belongsToClassMap map:issues;
+  d2rq:uriPattern "https://kato.bco-dmo.org/issues/@@issues.id@@";
+  d2rq:property schema:url .
+
+map:issues.closed_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.closed_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:issues.closed_on .
+
+map:issues.created_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.created_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:issues.created_on .
+
+map:issues.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.description";
+   d2rq:datatype rdf:HTML;
+   d2rq:property redmine:issues.description .
+
+map:issues.done_ratio a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.done_ratio";
+   d2rq:datatype xsd:decimal;
+   d2rq:property redmine:issues.done_ratio .
+
+map:issues.due_date a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.due_date";
+   d2rq:datatype xsd:date;
+   d2rq:property redmine:issues.due_date .
+
+map:issues.estimated_hours a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   #d2rq:column "issues.estimated_hours";
+   # format as a string to avoid scientific notation.
+   d2rq:sqlExpression "CONCAT(issues.estimated_hours)";
+   d2rq:datatype xsd:float;
+   d2rq:property redmine:issues.estimated_hours .
+
+map:issues.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.id";
+   d2rq:datatype xsd:token;
+   d2rq:property redmine:issues.id .
+
+map:issues.is_private a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.is_private";
+   d2rq:property redmine:issues.is_private .
+
+map:issues.lock_version a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:datatype xsd:long;
+   d2rq:column "issues.lock_version";
+   d2rq:property redmine:issues.lock_version .
+
+map:issues.start_date a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.start_date";
+   d2rq:datatype xsd:date;
+   d2rq:property redmine:issues.start_date .
+
+map:issues.subject a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:column "issues.subject";
+   d2rq:property redmine:issues.subject .
+
+map:issues.updated_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issues;
+   d2rq:datatype xsd:dateTime;
+   d2rq:column "issues.updated_on";
+   d2rq:property redmine:issues.updated_on .
+
+## Issue Statues ##
+
+map:issue_statuses a d2rq:ClassMap;
+   d2rq:class redmine:IssueStatus;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue-status/@@issue_statuses.id@@" .
+map:label-issue_statuses a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:pattern "@@issue_statuses.name@@";
+   d2rq:property rdfs:label .
+
+#### Properties ####
+
+map:issue_statuses.default_done_ratio a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:datatype xsd:decimal;
+   d2rq:column "issue_statuses.default_done_ratio";
+   d2rq:property redmine:issue_statuses.default_done_ratio .
+
+map:issue_statuses.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:column "issue_statuses.id";
+   d2rq:property redmine:issue_statuses.id .
+
+map:issue_statuses.is_closed a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:column "issue_statuses.is_closed";
+   d2rq:property redmine:issue_statuses.is_closed .
+
+map:issue_statuses.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:column "issue_statuses.name";
+   d2rq:property redmine:issue_statuses.name .
+
+map:issue_statuses.position a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:issue_statuses;
+   d2rq:datatype xsd:int;
+   d2rq:column "issue_statuses.position";
+   d2rq:property redmine:issue_statuses.position .
+
+
+## Journal Details ##
+
+map:journal_details a d2rq:ClassMap;
+   d2rq:class redmine:JournalDetail;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/journal-detail/@@journal_details.id@@" .
+map:label-journal_details a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:pattern "@@journal_details.id@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+
+map:journal_details.journal_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/journal/@@journal_details.journal_id@@";
+   d2rq:property redmine:journal_details.journal_id .
+
+#### Properties ####
+
+map:journal_details.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:column "journal_details.id";
+   d2rq:property redmine:journal_details.id .
+
+map:journal_details.old_value a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:column "journal_details.old_value";
+   d2rq:property redmine:journal_details.old_value .
+
+map:journal_details.prop_key a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:column "journal_details.prop_key";
+   d2rq:property redmine:journal_details.prop_key .
+
+map:journal_details.property a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:column "journal_details.property";
+   d2rq:property redmine:journal_details.property .
+
+map:journal_details.value a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journal_details;
+   d2rq:column "journal_details.value";
+   d2rq:property redmine:journal_details.value .
+
+
+## Journal ##
+
+map:journals a d2rq:ClassMap;
+   d2rq:class redmine:Journal;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/journal/@@journals.id@@" .
+map:label-journals a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:pattern "Change #@@journals.id@@ for @@journals.journalized_type@@ #@@journals.journalized_id@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+
+map:journals.journalized_id_issue a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:condition "journals.journalized_type = 'Issue'";
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@journals.journalized_id@@";
+   d2rq:property redmine:journals.journalized_id .
+
+map:journals.user_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@journals.user_id@@";
+   d2rq:property redmine:journals.user_id .
+
+#### Properties ####
+
+map:journals.created_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:datatype xsd:dateTime;
+   d2rq:column "journals.created_on";
+   d2rq:property redmine:journals.created_on .
+
+map:journals.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:column "journals.id";
+   d2rq:property redmine:journals.id .
+
+map:journals.journalized_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:column "journals.journalized_id";
+   d2rq:property redmine:journals.journalized_id .
+
+map:journals.journalized_type a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:column "journals.journalized_type";
+   d2rq:property redmine:journals.journalized_type .
+
+map:journals.notes a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:column "journals.notes";
+   d2rq:property redmine:journals.notes .
+
+map:journals.private_notes a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:journals;
+   d2rq:column "journals.private_notes";
+   d2rq:property redmine:journals.private_notes .
+
+
+## Project ##
+
+map:projects a d2rq:ClassMap;
+   d2rq:class redmine:Project;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@projects.id@@" .
+map:label-projects a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:pattern "@@projects.name@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+map:projects.default_assigned_to_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@projects.default_assigned_to_id@@";
+   d2rq:property redmine:projects.default_assigned_to_id .
+
+#### Properties ####
+
+map:projects.created_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.created_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:projects.created_on .
+
+map:projects.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.description";
+   d2rq:property redmine:projects.description .
+
+map:projects.homepage a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.homepage";
+   d2rq:datatype xsd:anyURI;
+   d2rq:property redmine:projects.homepage .
+
+map:projects.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.id";
+   d2rq:property redmine:projects.id .
+
+map:projects.identifier a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.identifier";
+   d2rq:datatype xsd:token;
+   d2rq:property redmine:projects.identifier .
+
+map:projects.is_public a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.is_public";
+   d2rq:property redmine:projects.is_public .
+
+map:projects.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.name";
+   d2rq:property redmine:projects.name .
+
+map:projects.updated_on a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects;
+   d2rq:column "projects.updated_on";
+   d2rq:datatype xsd:dateTime;
+   d2rq:property redmine:projects.updated_on .
+
+
+## Project Tracker ##
+map:projects_trackers a d2rq:ClassMap;
+   d2rq:class redmine:ProjectTracker;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/projects_trackers/project:@@projects_trackers.project_id@@_tracker:@@projects_trackers.tracker_id@@" .
+
+## Links ##
+
+map:projects_trackers.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects_trackers;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/project/@@projects_trackers.project_id@@";
+   d2rq:property redmine:projects_trackers.project_id .
+
+map:projects_trackers.tracker_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:projects_trackers;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/tracker/@@projects_trackers.tracker_id@@";
+   d2rq:property redmine:projects_trackers.tracker_id .
+
+
+## Tracker ##
+
+map:trackers a d2rq:ClassMap;
+   d2rq:class redmine:Tracker;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/trackers/@@trackers.id@@" .
+map:label-trackers a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:pattern "@@trackers.name@@";
+   d2rq:property rdfs:label .
+
+## Links ##
+
+
+## Properties ##
+map:trackers.default_status_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.default_status_id";
+   d2rq:property redmine:trackers.default_status_id .
+
+map:trackers.fields_bits a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.fields_bits";
+   d2rq:property redmine:trackers.fields_bits .
+
+map:trackers.id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.id";
+   d2rq:property redmine:trackers.id .
+
+map:trackers.is_in_chlog a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.is_in_chlog";
+   d2rq:property redmine:trackers.is_in_chlog .
+
+map:trackers.is_in_roadmap a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.is_in_roadmap";
+   d2rq:property redmine:trackers.is_in_roadmap .
+
+map:trackers.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.name";
+   d2rq:property redmine:trackers.name .
+
+map:trackers.position a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:trackers;
+   d2rq:column "trackers.position";
+   d2rq:property redmine:trackers.position .
+
+
+## User ##
+
+map:users a d2rq:ClassMap;
+   d2rq:class redmine:User;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@users.id@@" .
+map:label-users a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:users;
+   d2rq:pattern "@@users.type@@: @@users.firstname@@@@users.lastname@@";
+   d2rq:property rdfs:label .
+map:users-fullname a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:users;
+   d2rq:pattern "@@users.firstname@@ @@users.lastname@@";
+   d2rq:property schema:name .
+
+## Versions ##
+
+map:versions a d2rq:ClassMap;
+   d2rq:class redmine:Version;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/versions/@@versions.id@@" .
+map:label-versions a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:pattern "@@versions.name@@";
+   d2rq:property rdfs:label .
+
+#### Links ####
+
+map:versions.project_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/versions/@@versions.project_id@@";
+   d2rq:property redmine:versions.project_id .
+
+#### Properties ####
+
+map:versions.description a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:column "versions.description";
+   d2rq:property redmine:versions.description .
+
+map:versions.effective_date a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:column "versions.effective_date";
+   d2rq:datatype xsd:date;
+   d2rq:property redmine:versions.effective_date .
+
+map:versions.name a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:column "versions.name";
+   d2rq:property redmine:versions.name .
+
+map:versions.status a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:versions;
+   d2rq:column "versions.status";
+   d2rq:property redmine:versions.status .
+
+
+## Watcher ##
+
+map:watchers a d2rq:ClassMap;
+   d2rq:class redmine:Watcher;
+   d2rq:dataStorage map:database;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/watchers/@@watchers.id@@" .
+
+## Links ##
+
+map:watchers.user_id a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:watchers;
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/user/@@watchers.user_id@@";
+   d2rq:property redmine:watchers.user_id .
+
+map:watchers.watchable_id_issue a d2rq:PropertyBridge;
+   d2rq:belongsToClassMap map:watchers;
+   d2rq:condition "watchers.watchable_type = 'Issue'";
+   d2rq:uriPattern "https://d2rq.bco-dmo.org/id/redmine/issue/@@watchers.watchable_id@@";
+   d2rq:property redmine:watchers.watchable_id .
+

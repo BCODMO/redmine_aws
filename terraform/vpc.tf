@@ -14,6 +14,14 @@ resource "aws_security_group" "redmine" {
   vpc_id      = aws_default_vpc.default.id
 
   ingress {
+    description = "Allow submission tool access"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    security_groups = [var.submission_prod_security_group_id, var.submission_default_security_group_id]
+  }
+
+  ingress {
     description = "Access all from WHOI"
     from_port   = 0
     to_port     = 0

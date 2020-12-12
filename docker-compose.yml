@@ -18,3 +18,18 @@ services:
     ports:
       - "0.0.0.0:3000:3000"
 
+  redmine_d2rq:
+    build:
+      context: "."
+      dockerfile: d2rq/Dockerfile
+      args:
+        - REDMINE_DB_MYSQL=${REDMINE_DB_MYSQL}
+        - REDMINE_DB_PORT=${REDMINE_DB_PORT}
+        - REDMINE_DB_USERNAME=${REDMINE_DB_USERNAME}
+        - REDMINE_DB_PASSWORD=${REDMINE_DB_PASSWORD}
+    restart: unless-stopped
+    ports:
+      - 2020:2020
+    environment:
+      - D2R_BASEURI=${D2R_BASEURI}
+

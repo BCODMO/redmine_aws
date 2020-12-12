@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "redmine" {
-  name                 = "redmine_${terraform.workspace}"
+resource "aws_ecr_repository" "d2rq" {
+  name                 = "redmine_d2rq_${terraform.workspace}"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -7,29 +7,29 @@ resource "aws_ecr_repository" "redmine" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "redmine" {
-  name              = "/ecs/redmine_${terraform.workspace}"
+resource "aws_cloudwatch_log_group" "d2rq" {
+  name              = "/ecs/redmine_d2rq_${terraform.workspace}"
   retention_in_days = "7"
 
 }
 
 
-resource "aws_ecs_task_definition" "redmine" {
-  family                = "redmine_${terraform.workspace}"
+resource "aws_ecs_task_definition" "d2rq" {
+  family                = "redmine_d2rq_${terraform.workspace}"
   container_definitions = <<EOF
 [
     {
-        "name": "redmine_container_${terraform.workspace}",
-        "image": "${aws_ecr_repository.redmine.repository_url}:latest",
+        "name": "redmine_d2rq_container_${terraform.workspace}",
+        "image": "${aws_ecr_repository.d2rq.repository_url}:latest",
         "portMappings": [
             {
-                "containerPort": 3000
+                "containerPort": 2020
             }
         ],
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "${aws_cloudwatch_log_group.redmine.name}",
+                "awslogs-group": "${aws_cloudwatch_log_group.d2rq.name}",
                 "awslogs-region": "us-east-1",
                 "awslogs-stream-prefix": "ecs"
             }
@@ -72,14 +72,14 @@ EOF
 
 }
 
-resource "aws_ecs_service" "redmine" {
-  name                 = "redmine_${terraform.workspace}"
+resource "aws_ecs_service" "d2rq" {
+  name                 = "redmine_d2rq_${terraform.workspace}"
   launch_type          = "FARGATE"
   force_new_deployment = "true"
   cluster              = aws_ecs_cluster.redmine.id
-  task_definition      = aws_ecs_task_definition.redmine.arn
+  task_definition      = aws_ecs_task_definition.d2rq.arn
   desired_count        = 1
-  depends_on           = [aws_iam_role_policy.rds_access_policy, aws_iam_role_policy.ecs_access_policy, aws_alb.redmine]
+  depends_on           = [aws_iam_role_policy.rds_access_policy, aws_iam_role_policy.ecs_access_policy]
 
   network_configuration {
     subnets          = [aws_default_subnet.default_1a.id, aws_default_subnet.default_1b.id]
@@ -88,11 +88,10 @@ resource "aws_ecs_service" "redmine" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.redmine.id
-    container_name   = "redmine_container_${terraform.workspace}"
-    container_port   = 3000
+    target_group_arn = aws_alb_target_group.d2rq.id
+    container_name   = "redmine_d2rq_container_${terraform.workspace}"
+    container_port   = 2020
   }
-
 
 
   lifecycle {

@@ -9,3 +9,5 @@ variable "whoi_ip" {
 variable "rds_password" {
 }
 
+variable "submission_default_security_group_id" {}
+variable "submission_prod_security_group_id" {}
