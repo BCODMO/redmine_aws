@@ -93,11 +93,15 @@ resource "aws_ecs_service" "redmine" {
     container_port   = 3000
   }
 
+    service_registries {
+        registry_arn = aws_service_discovery_service.redmine.arn
+    }
+
 
 
   lifecycle {
     ignore_changes = [desired_count]
   }
 
-
 }
+
