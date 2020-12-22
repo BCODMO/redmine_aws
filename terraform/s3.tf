@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "redmine" {
 resource "aws_s3_bucket_policy" "b" {
   bucket = aws_s3_bucket.redmine.id
 
-# This policy ensures that all objects are open for users within the whoi IP range
+  # This policy ensures that all objects are open for users within the whoi IP range
   policy = <<POLICY
 {
   "Version": "2012-10-17",
