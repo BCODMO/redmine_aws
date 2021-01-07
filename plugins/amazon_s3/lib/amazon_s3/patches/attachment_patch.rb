@@ -11,6 +11,14 @@ module AmazonS3
         after_validation :put_to_s3
         after_create      :generate_thumbnail_s3
         before_destroy   :delete_from_s3
+        def readable?
+          Connection.object(disk_filename_s3).exists?
+        end
+
+        def diskfile
+          Connection.object_url(disk_filename_s3)
+        end
+
       end
     end
 

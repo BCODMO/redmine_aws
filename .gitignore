@@ -29,3 +29,6 @@ override.tf.json
 # example: *tfplan*
 #
 .env
+
+scripts/*/*.csv
+scripts/*/*.tsv
