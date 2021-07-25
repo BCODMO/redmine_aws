@@ -21,4 +21,4 @@ RUN sed -i "s/BUCKET_NAME/${AWS_BUCKET}/g" /usr/src/redmine/config/amazon_s3.yml
 RUN bundle install --without development test
 
 # Add max height and scroll to DM Processing Notes custom field
-RUN echo "\n\n/*Add max height and scroll to DM Processing Notes custom field */\ndiv.cf_18.attribute div.value {\n  overflow-y: auto;\n  max-width: 300px;\n}" >> /usr/src/redmine/public/stylesheets/application.css
+RUN echo "\n\n/*Add max height and scroll to DM Processing Notes custom field */\ndiv.cf_18.attribute div.value {\n  overflow-y: auto;\n  max-height: 300px;\n}" >> /usr/src/redmine/public/stylesheets/application.css
