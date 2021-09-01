@@ -13,16 +13,23 @@ function addOspreyInfo() {
     ).then(async (response) => {
       const data = await response.json();
       for (let key in data.results.bindings) {
-        console.log(data.results.bindings[key].uri.value);
-        console.log(data.results.bindings[key].label.value);
-        let elem = document.getElementById("bcodmo-osprey-query");
-        console.log(elem);
-        elem.innerHTML =
-          '<hr/><strong>OSPREY:</strong> <a href="' +
-          data.results.bindings[key].uri.value +
-          '" target="_blank">' +
-          data.results.bindings[key].label.value +
-          "</a>";
+        // Make sure the results look like we expect
+        if (
+          "uri" in data.results.bindings[key] &&
+          "label" in data.results.bindings[key]
+        ) {
+          newEl = $(`
+            <div>
+              <hr/><strong>OSPREY:</strong> <a
+                href="${data.results.bindings[key].uri.value}"
+                target="_blank">
+                ${data.results.bindings[key].label.value}
+              </a>
+            </div>
+
+          `);
+          $("#bcodmo-osprey-query").append(newEl);
+        }
       }
     });
   }
