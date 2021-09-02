@@ -23,10 +23,15 @@ RUN bundle install --without development test
 # Add max height and scroll to DM Processing Notes custom field
 RUN echo "\n\n/*Add max height and scroll to DM Processing Notes custom field */\ndiv.cf_18.attribute div.value {\n  overflow-y: auto;\n  max-height: 300px;\n}" >> /usr/src/redmine/public/stylesheets/application.css
 
-# Add custom code to issues page
+# Add custom code to add osprey issues page
 COPY js/osprey.js /usr/src/osprey.js
 RUN cat /usr/src/osprey.js >> /usr/src/redmine/public/javascripts/application.js
 RUN rm /usr/src/osprey.js
+
+# Add custom code to remove delete footer from issues page
+COPY js/delete.js /usr/src/delete.js
+RUN cat /usr/src/delete.js >> /usr/src/redmine/public/javascripts/application.js
+RUN rm /usr/src/delete.js
 
 # Change warning text of deleting an issue
 
