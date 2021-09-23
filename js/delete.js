@@ -4,7 +4,7 @@ function removeDelete() {
     // Check that we're in the right path
     const match = window.location.pathname.match(/^\/issues\/([0-9]*)$/);
     if (match && match.length === 2) {
-      $("div#content div.contextual a.icon.icon-del").detach();
+      $("div#content div.contextual a.icon.icon-del").last().detach();
     }
   } catch (e) {
     console.warn("Failed in delete");
