@@ -18,7 +18,7 @@ resource "aws_security_group" "redmine" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [var.submission_default_security_group_id, var.submission_prod_security_group_id]
+    security_groups = [var.submission_staging_security_group_id, var.submission_prod_security_group_id]
   }
 
   ingress {
