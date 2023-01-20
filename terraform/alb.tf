@@ -9,7 +9,7 @@ resource "aws_alb_target_group" "redmine" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_default_vpc.default.id
-  target_type = "ip"
+  target_type = "instance"
   health_check {
     timeout  = 120
     interval = 300
@@ -46,7 +46,7 @@ resource "aws_alb_target_group" "d2rq" {
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_default_vpc.default.id
-  target_type = "ip"
+  target_type = "instance"
   health_check {
     timeout  = 120
     interval = 300

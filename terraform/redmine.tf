@@ -21,9 +21,12 @@ resource "aws_ecs_task_definition" "redmine" {
     {
         "name": "redmine_container_${terraform.workspace}",
         "image": "${aws_ecr_repository.redmine.repository_url}:latest",
+        "memoryReservation": 256,
+        "cpu": 512,
         "portMappings": [
             {
-                "containerPort": 3000
+                "containerPort": 3000,
+                "hostPort": 3000
             }
         ],
         "logConfiguration": {
@@ -60,11 +63,7 @@ EOF
   task_role_arn      = aws_iam_role.ecs_role.arn
   execution_role_arn = aws_iam_role.ecs_role.arn
 
-  cpu    = "512"
-  memory = "1024"
-
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
+  network_mode = "bridge"
 
   tags = {
     name = "latest"
@@ -74,18 +73,13 @@ EOF
 
 resource "aws_ecs_service" "redmine" {
   name                 = "redmine_${terraform.workspace}"
-  launch_type          = "FARGATE"
+  launch_type          = "EC2"
   force_new_deployment = "true"
   cluster              = aws_ecs_cluster.redmine.id
   task_definition      = aws_ecs_task_definition.redmine.arn
   desired_count        = 1
   depends_on           = [aws_iam_role_policy.rds_access_policy, aws_iam_role_policy.ecs_access_policy, aws_alb.redmine]
 
-  network_configuration {
-    subnets          = [aws_default_subnet.default_1a.id, aws_default_subnet.default_1b.id]
-    security_groups  = [aws_security_group.redmine.id]
-    assign_public_ip = "true"
-  }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.redmine.id
@@ -95,6 +89,8 @@ resource "aws_ecs_service" "redmine" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.redmine.arn
+    container_port = 3000
+    container_name   = "redmine_container_${terraform.workspace}"
   }
 
 

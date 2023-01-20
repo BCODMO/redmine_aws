@@ -21,6 +21,13 @@ resource "aws_security_group" "redmine" {
     security_groups = [var.submission_staging_security_group_id, var.submission_prod_security_group_id]
   }
   ingress {
+    description     = "Allow pm view tool access"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [var.pm_view_staging_security_group_id]
+  }
+  ingress {
     description     = "Allow pm_view tool access"
     from_port       = 0
     to_port         = 0
