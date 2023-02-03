@@ -35,6 +35,41 @@ resource "aws_alb_listener" "redmine" {
   }
 }
 
+resource "aws_alb" "redmine_internal" {
+  name            = "redmine-internal-${terraform.workspace}"
+  subnets         = [aws_default_subnet.default_1a.id, aws_default_subnet.default_1b.id]
+  security_groups = [aws_security_group.redmine.id]
+  internal        = true
+}
+
+resource "aws_alb_target_group" "redmine_internal" {
+  name        = "redmine-internal-tgroup-${terraform.workspace}"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_default_vpc.default.id
+  target_type = "instance"
+  health_check {
+    timeout  = 120
+    interval = 300
+    # Support redirect for the login as healthy
+    matcher = "200-299,302"
+  }
+}
+
+# Redirect all traffic from the ALB to the target group
+resource "aws_alb_listener" "redmine_internal" {
+  load_balancer_arn = aws_alb.redmine_internal.id
+  port              = "80"
+  protocol          = "HTTP"
+
+
+  default_action {
+    target_group_arn = aws_alb_target_group.redmine_internal.id
+    type             = "forward"
+  }
+}
+
+
 resource "aws_alb" "d2rq" {
   name            = "redmine-d2rq-${terraform.workspace}"
   subnets         = [aws_default_subnet.default_1a.id, aws_default_subnet.default_1b.id]

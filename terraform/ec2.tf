@@ -43,7 +43,7 @@ resource "aws_autoscaling_group" "redmine" {
   name                = "redmine-${terraform.workspace}-asg"
   vpc_zone_identifier = [aws_default_subnet.default_1a.id, aws_default_subnet.default_1b.id]
   launch_template {
-    id = aws_launch_template.redmine.id
+    id      = aws_launch_template.redmine.id
     version = "$Latest"
   }
 

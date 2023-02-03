@@ -21,12 +21,11 @@ resource "aws_ecs_task_definition" "redmine" {
     {
         "name": "redmine_container_${terraform.workspace}",
         "image": "${aws_ecr_repository.redmine.repository_url}:latest",
-        "memoryReservation": 256,
-        "cpu": 512,
+        "memoryReservation": 128,
         "portMappings": [
             {
                 "containerPort": 3000,
-                "hostPort": 3000
+                "hostPort": 0
             }
         ],
         "logConfiguration": {
@@ -86,13 +85,11 @@ resource "aws_ecs_service" "redmine" {
     container_name   = "redmine_container_${terraform.workspace}"
     container_port   = 3000
   }
-
-  service_registries {
-    registry_arn = aws_service_discovery_service.redmine.arn
-    container_port = 3000
+  load_balancer {
+    target_group_arn = aws_alb_target_group.redmine_internal.id
     container_name   = "redmine_container_${terraform.workspace}"
+    container_port   = 3000
   }
-
 
 
   lifecycle {

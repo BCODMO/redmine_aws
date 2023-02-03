@@ -21,11 +21,11 @@ resource "aws_ecs_task_definition" "d2rq" {
     {
         "name": "redmine_d2rq_container_${terraform.workspace}",
         "image": "${aws_ecr_repository.d2rq.repository_url}:latest",
-        "memoryReservation": 256,
-        "cpu": 512,
+        "memoryReservation": 128,
         "portMappings": [
             {
-                "containerPort": 2020
+                "containerPort": 2020,
+                "hostPort": 0
             }
         ],
         "logConfiguration": {
