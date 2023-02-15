@@ -33,6 +33,11 @@ COPY js/delete.js /usr/src/delete.js
 RUN cat /usr/src/delete.js >> /usr/src/redmine/public/javascripts/application.js
 RUN rm /usr/src/delete.js
 
+# Add custom code to fix firefox form bug (see code for details) 
+COPY js/firefoxFormBug.js /usr/src/firefoxFormBug.js
+RUN cat /usr/src/firefoxFormBug.js >> /usr/src/redmine/public/javascripts/application.js
+RUN rm /usr/src/firefoxFormBug.js
+
 # Change warning text of deleting an issue
 
 RUN sed -i 's/Are you sure you want to delete the selected issue(s)?/Are you sure you want to delete the entire issue(s)? Deleted issues cannot be restored./g' /usr/src/redmine/config/locales/sq.yml 
