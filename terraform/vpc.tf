@@ -42,6 +42,23 @@ resource "aws_security_group" "redmine" {
     protocol    = "-1"
     cidr_blocks = [var.whoi_ip]
   }
+/*
+  ingress {
+    description = "Access HTTPS from the world"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Access HTTP from the world (for redirect)"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+*/
 
   ingress {
     description = "All ingress for self"
