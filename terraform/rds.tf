@@ -11,7 +11,7 @@ resource "aws_db_instance" "redmine" {
   backup_retention_period = 10
   backup_window           = "07:00-07:30"
   password                = var.rds_password
-  parameter_group_name    = "default.mysql5.7"
+  parameter_group_name    = "default.mysql8.0"
   vpc_security_group_ids  = [aws_security_group.redmine.id]
   skip_final_snapshot     = true
 
