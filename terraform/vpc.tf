@@ -20,6 +20,7 @@ resource "aws_security_group" "redmine" {
     protocol        = "-1"
     security_groups = [var.submission_staging_security_group_id, var.submission_prod_security_group_id]
   }
+/*
   ingress {
     description     = "Allow pm view tool access"
     from_port       = 0
@@ -27,12 +28,14 @@ resource "aws_security_group" "redmine" {
     protocol        = "-1"
     security_groups = [var.pm_view_staging_security_group_id]
   }
+
+*/
   ingress {
-    description     = "Allow pm_view tool access"
+    description     = "Allow nsf app tool access"
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [var.pm_view_staging_security_group_id]
+    security_groups = [var.nsf_app_security_group_id]
   }
 
   ingress {
@@ -42,7 +45,6 @@ resource "aws_security_group" "redmine" {
     protocol    = "-1"
     cidr_blocks = [var.whoi_ip]
   }
-/*
   ingress {
     description = "Access HTTPS from the world"
     from_port   = 443
@@ -58,7 +60,6 @@ resource "aws_security_group" "redmine" {
     protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
   }
-*/
 
   ingress {
     description = "All ingress for self"
@@ -75,7 +76,7 @@ resource "aws_security_group" "redmine" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   lifecycle {
-    ignore_changes = [ingress]
+    ignore_changes = []
   }
 }
 

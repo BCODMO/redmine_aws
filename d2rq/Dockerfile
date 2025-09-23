@@ -1,4 +1,5 @@
-FROM java:7-jre-alpine
+FROM amazoncorretto:8-alpine
+
 
 ARG REDMINE_DB_MYSQL
 ARG REDMINE_DB_PORT
@@ -14,7 +15,7 @@ ENV D2R_MAPPING=mapping.ttl
 
  
 RUN apk add --no-cache bash curl \
-  && curl -o /tmp/d2rq-${D2R_VERSION}.tar.gz -L https://github.com/downloads/d2rq/d2rq/d2rq-${D2R_VERSION}.tar.gz \
+  && curl -o /tmp/d2rq-${D2R_VERSION}.tar.gz -L https://github.com/d2rq/d2rq/archive/refs/tags/v${D2R_VERSION}.tar.gz \
   && tar -C /usr/local/ -xf /tmp/d2rq-${D2R_VERSION}.tar.gz \
   && rm /tmp/d2rq-${D2R_VERSION}.tar.gz \
   && mkdir /var/lib/d2rq

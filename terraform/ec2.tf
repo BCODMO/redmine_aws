@@ -27,7 +27,8 @@ resource "aws_iam_instance_profile" "ecs_agent" {
 
 resource "aws_launch_template" "redmine" {
   name          = "redmine-${terraform.workspace}-launch-config"
-  image_id      = "ami-00eb0dc604a8124fd"
+  image_id      = "ami-066d355e52dd737a4"
+  update_default_version = true
   instance_type = "t2.micro"
   user_data     = base64encode("#!/bin/bash\necho ECS_CLUSTER=${aws_ecs_cluster.redmine.name} >> /etc/ecs/ecs.config")
   network_interfaces {

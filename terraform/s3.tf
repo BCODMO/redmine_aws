@@ -19,6 +19,20 @@ resource "aws_s3_bucket_policy" "b" {
   "Version": "2012-10-17",
   "Id": "DenyAndAllowRead",
   "Statement": [
+    
+    {
+      "Sid": "PublicReadGetObject",
+      "Action": "s3:GetObject",
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::bcodmo-redmine/*",
+      "Principal": "*"
+    }
+  ]
+}
+POLICY
+}
+
+/*
     {
       "Sid": "IPAllow",
       "Effect": "Deny",
@@ -34,15 +48,5 @@ resource "aws_s3_bucket_policy" "b" {
         "NotIpAddress": {"aws:SourceIp": "${var.whoi_ip}"}
       }
     },
-    {
-      "Sid": "PublicReadGetObject",
-      "Action": "s3:GetObject",
-      "Effect": "Allow",
-      "Resource": "arn:aws:s3:::bcodmo-redmine/*",
-      "Principal": "*"
-    }
-  ]
-}
-POLICY
-}
 
+*/

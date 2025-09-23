@@ -13,3 +13,4 @@ variable "submission_staging_security_group_id" {}
 variable "submission_prod_security_group_id" {}
 
 variable "pm_view_staging_security_group_id" {}
+variable "nsf_app_security_group_id" {}

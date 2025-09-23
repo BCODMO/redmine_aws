@@ -33,13 +33,13 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 if [ "$USE_CACHE" = true ]
 then
     echo "Building with cache"
-    docker-compose build $NAME
+    docker compose build $NAME
 else
     echo "Building without cache"
-    docker-compose build --no-cache $NAME
+    docker compose build --no-cache $NAME
 fi
 echo "Tagging"
-docker tag redmine_$NAME:latest 504672911985.dkr.ecr.us-east-1.amazonaws.com/${NAME}_${ENV}:$VERSION
+docker tag redmine-$NAME:latest 504672911985.dkr.ecr.us-east-1.amazonaws.com/${NAME}_${ENV}:$VERSION
 echo "Pushing"
 docker push 504672911985.dkr.ecr.us-east-1.amazonaws.com/${NAME}_${ENV}:$VERSION
 

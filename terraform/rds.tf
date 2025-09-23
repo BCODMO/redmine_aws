@@ -4,7 +4,7 @@ resource "aws_db_instance" "redmine" {
   allocated_storage       = 20
   storage_type            = "gp2"
   engine                  = "mysql"
-  engine_version          = "8.0.35"
+  engine_version          = "8.4.6"
   instance_class          = "db.t3.micro"
   name                    = "redmine"
   username                = "admin"
